@@ -1,0 +1,19 @@
+spring.application.name=tracker-backend
+
+# SQLite — arquivo criado automaticamente na pasta do usuário
+spring.datasource.url=jdbc:sqlite:${user.home}/SteamDealTracker/steamdeals.db?journal_mode=WAL
+spring.datasource.driver-class-name=org.sqlite.JDBC
+spring.datasource.username=
+spring.datasource.password=
+
+spring.jpa.database-platform=org.hibernate.community.dialect.SQLiteDialect
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=false
+spring.jpa.open-in-view=false
+spring.jpa.properties.hibernate.id.new_generator_mappings=false
+
+management.endpoints.web.exposure.include=health,info
+
+scheduler.verificacao.intervalo-ms=10800000
+scheduler.verificacao.delay-inicial-ms=60000
