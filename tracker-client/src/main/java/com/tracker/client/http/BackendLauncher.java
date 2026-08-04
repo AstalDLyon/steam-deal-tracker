@@ -12,27 +12,36 @@ public class BackendLauncher {
     private static Process backendProcess;
 
     public static boolean iniciarBackend() {
-        // Durante desenvolvimento no IntelliJ, o backend já está rodando
-        // Só inicia o processo se o JAR existir na mesma pasta do executável
         Path jarPath = resolverCaminhoJar();
 
         if (jarPath == null || !Files.exists(jarPath)) {
-            log.info("tracker-backend.jar não encontrado — assumindo backend já rodando (modo dev)");
-            return true; // no IntelliJ, o backend já está rodando manualmente
+            log.info("tracker-backend.jar não encontrado — modo dev, backend já rodando");
+            return true;
         }
 
         try {
-            String javaExe = ProcessHandle.current().info().command()
-                    .orElse("java");
+            Path javaExe = jarPath.getParent()
+                    .getParent()
+                    .resolve("runtime")
+                    .resolve("bin")
+                    .resolve("java.exe");
+
+            String javaCmd = Files.exists(javaExe)
+                    ? javaExe.toAbsolutePath().toString()
+                    : "java";
+
+            log.info("Iniciando backend com: " + javaCmd);
 
             ProcessBuilder pb = new ProcessBuilder(
-                    javaExe,
+                    javaCmd,
+                    "--enable-native-access=ALL-UNNAMED",
                     "-jar",
                     jarPath.toAbsolutePath().toString()
             );
 
             pb.redirectErrorStream(true);
-            pb.redirectOutput(ProcessBuilder.Redirect.DISCARD); // silencia o output do backend
+            pb.redirectOutput(ProcessBuilder.Redirect.DISCARD);
+            pb.directory(jarPath.getParent().toFile());
 
             backendProcess = pb.start();
             log.info("Backend iniciado — PID: " + backendProcess.pid());
@@ -52,7 +61,6 @@ public class BackendLauncher {
     }
 
     private static Path resolverCaminhoJar() {
-        // Procura o JAR na mesma pasta do executável atual
         try {
             Path pastaExecutavel = Paths.get(
                     BackendLauncher.class.getProtectionDomain()
