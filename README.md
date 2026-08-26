@@ -10,7 +10,7 @@ Esse projeto não é de forma alguma superior a versões como "SteamDB" ou "IsTh
 O "SteamDB", não tem API e eu não irei fazer webscraping no serviço deles.
 
 ## Como Executar
-Ainda não está completo, por isso não irei recomendar a ninguém
+Ainda não está completo, por isso não irei recomendar ou ensinar outras pessoas a executarem.
 
 ## Tecnologias
 - Java 25
